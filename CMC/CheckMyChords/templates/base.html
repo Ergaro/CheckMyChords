@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+    	<title>{% block title %} CheckMyChords {% endblock %}</title>
+	    <meta charset="utf-8">
+	    <style>
+			body {
+				background-color: black;
+				color: #F0F0F0;
+			}
+		</style>
+    </head>
+    <body>
+        {% block content %}
+        {% endblock %}
+        <br><br><br><br>
+        <footer>
+        	<p>Data: {{ date }}</p>
+        	<p>Wersja: {{ version }}</p>
+        </footer>
+    </body>
+</html>
+
+
