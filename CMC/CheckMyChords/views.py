@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.views import View
 
 from .forms import (
@@ -17,7 +18,8 @@ class HelloWorldView(View):
         return HttpResponse('Hello world!')
     
 
-class CheckNewPieceView(View):
+class AddPieceView(View):
+    # Lets You add a new piece manually, Strings as an input
     def get(self, request):
         form = NewPieceForm()
         return render(request, 'new_piece.html', {'form':form})
@@ -25,19 +27,27 @@ class CheckNewPieceView(View):
     def post(self, request):
         form = NewPieceForm(request.POST)
         if form.is_valid():
-            # Save piece to database
             new_piece = MusicPiece.objects.create(**form.cleaned_data)
-            # Check harmony rules
-            checked_piece = check_harmony_rules(new_piece)
-            # checked_piece is a Piece object, not MusicPiece object!!!
-            #     the results are stored in checked_piece
-            
-            # Get&Present result (redirect to sth?)
-            result = "the piece was checked, result: {} errors, {}".format(checked_piece.err_count, checked_piece.err_w_types)
-
-            return HttpResponse(result)
+            return HttpResponseRedirect(
+                reverse("check_piece", kwargs = {"piece_id":new_piece.id})
+            )
         else:
             return render(request, 'new_piece.html', {'form':form})
     
+class PiecesView(View):
+    def get(self, request):
+        ctx = {
+            "pieces": MusicPiece.objects.all()
+        }
+        return render(request, 'pieces.html', ctx)
 
+class CheckPieceView(View):
+    def get(self, request, piece_id):
+        piece = MusicPiece.objects.get(id=piece_id)
+        checked_piece = check_harmony_rules(piece)
+        return render(request, 'check_piece.html', {'piece': checked_piece})
+    
+    def post(self, request, piece_id):
+        # Check the piece, but only using the rules chosen in form
+        pass
 

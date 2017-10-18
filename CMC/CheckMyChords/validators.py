@@ -11,8 +11,12 @@ def NotesValidator(input):
     
     if 'h' in input or 'H' in input:
         raise ValidationError("Use english notation!")
-    elif re.search(r"[^a-gA-GrR#,' ]", input) is not None:
-        # kick rests out of the regex above...
+    elif 'r' in input or 'R' in input:
+        raise ValidationError("Rests not allowed!")
+    elif re.search(r"[^a-gA-G#,' ]", input) is not None:
         raise ValidationError("Wrong notation")
+    
+def KeyValidator(input):
+    pass
     
 # add a validator to check if lengths of the parts match

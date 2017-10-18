@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>CheckMyChords - pieces in the database:</h1>
+	<h3>Click on a title to check the piece!</h3>
+    <ul>
+	{% for piece in pieces %}
+		<li>
+			<a href="{% url 'check_piece' piece.id %}">
+				{{ piece.title }}
+			</a>  (added: {{ piece.date_added}})
+		</li>
+	{% endfor %}
+	</ul>
+
+{% endblock %}
+
+

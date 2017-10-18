@@ -4,8 +4,6 @@ from pyknon.music import NoteSeq
 from pyknon.music import Note
 
 
-from pyknon_extension import * 
-
 
 class CheckmychordsConfig(AppConfig):
     name = 'CheckMyChords'

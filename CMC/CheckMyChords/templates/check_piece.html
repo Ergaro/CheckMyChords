@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load poll_extras %}
+
+{% block title %}
+	CMC - check piece
+{% endblock %}
+
+
+{% block content %}
+	<h1>CMC - checked piece: {{ piece.title }}</h1>
+	<div>
+		<ul style="font-family: monospace;">
+			<li> S: {{ piece.parts_hr.S|spacify}} </li>
+			<li> A: {{ piece.parts_hr.A|spacify}} </li>
+			<li> T: {{ piece.parts_hr.T|spacify}} </li>
+			<li> B: {{ piece.parts_hr.B|spacify}} </li>
+		</ul>
+	</div>
+	<div>
+		<h3>Total errors: {{ piece.err_count }}</h3>
+		{% if piece.err_count > 0 %}
+		<div>
+			<h4>Error list:</h4>
+			<ul>
+				{% for err_class in piece.err_detailed %}
+					<li>{{ err_class.0 }}: {{ err_class.1 }}
+						<ul>
+						{% for err in err_class.2 %}
+							<li> {{ err }} </li>
+						{% endfor %}
+						</ul>	
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+		<h3>Total warnings: {{ piece.war_count }}</h3>
+		{% if piece.war_count > 0 %}
+		<div>
+			<h4>Warnings list:</h4>
+			<ul>
+				{% for war_class in piece.war_detailed %}
+					<li>{{ war_class.0 }}: {{ war_class.1 }}
+						<ul>
+						{% for war in war_class.2 %}
+							<li> {{ war }} </li>
+						{% endfor %}
+						</ul>	
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+	</div>
+	</div>
+		<h4>Specify which rules you want to use:</h4>
+		form:
+		Checkboxes here...
+		send form (action post to the same url)
+	</div>
+{% endblock %}
+

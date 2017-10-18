@@ -17,7 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from CheckMyChords.views import (
     HelloWorldView,
-    CheckNewPieceView,
+    AddPieceView,
+    CheckPieceView,
+    PiecesView,
 )
 
 
@@ -25,5 +27,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^hello_world$', HelloWorldView.as_view()),
     
-    url(r'^new_piece$', CheckNewPieceView.as_view(), name="check_new_piece"),
+    url(r'^new_piece$', AddPieceView.as_view(), name="add_new_piece"),
+    url(r'^check_piece/(?P<piece_id>(\d)+)$', CheckPieceView.as_view(),
+        name = 'check_piece' ),
+    url(r'^$', PiecesView.as_view(), name = 'pieces'),
 ]

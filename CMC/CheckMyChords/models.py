@@ -10,5 +10,11 @@ class MusicPiece(models.Model):
     alto = models.TextField()
     tenor = models.TextField()
     bass = models.TextField()
+    # TODO:
     # add a CharField storing a key
     # add a filefield? (and store a midi?)
+    
+    
+    
+    
+    
