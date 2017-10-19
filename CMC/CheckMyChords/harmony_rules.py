@@ -1,4 +1,4 @@
-# Stores functions that check harmony of a piece
+# Stores classes & functions needed to check harmony of a piece
 from pyknon.music import Note, NoteSeq
 
 from .models import MusicPiece
@@ -97,10 +97,10 @@ class Chord(object):
     
     def find_structure(self):
         # method deducting chord structure from notes given (needs root)
-        # should leave initial (0) for unrecognised notes
+        # should leave initial (None) for unrecognised notes
         # minor/major thirds are distinguished
         if self.root == None:
-            return None
+            return
         intervals = {
             "0": "1",  # root
             "3": "3>",  # minor third
@@ -157,6 +157,7 @@ class Piece(object):
 
     @property
     def parts_hr(self):
+        # human-readable representation of the part
         result = {}
         for voice, part in self.parts.items():
             result[voice] = "|" + part.to_hrstr + "||"
@@ -164,6 +165,7 @@ class Piece(object):
     
     @property
     def key_hr(self):
+        # human-readable version of key
         if None in self.key:
             return "Unknown key"
         else:
@@ -199,7 +201,6 @@ class Piece(object):
         else:
             self.key[1] = 1  # major as a fallback value
     
-    
     def check_harmony(self, rules=['ALL']):
         # main method for checking harmony of a piece, should call methods
         # for checking each rule
@@ -220,8 +221,8 @@ class Piece(object):
     # Increase self.err_count by number of mistakes found
     # Append a 3-element touple to self.err_detailed, matching the pattern:
     # ( <Mistake type (str)> , <err_count (int)>, <list of str-s with details
-    # about each mistake> ) 
-        
+    # about each mistake> )
+    
     def check_range(self):
         # checking vocal range for each voice in the piece
         err_count = 0
@@ -245,7 +246,7 @@ class Piece(object):
             errs.sort()
             self.err_count += err_count
             self.err_detailed.append(("Voice range errors", err_count, errs))
-
+    
     def check_leaps(self):
         # checking for restricted intervals: leaps of a 7th, or >=9th
         err_count = 0
@@ -266,12 +267,11 @@ class Piece(object):
                     errs.append(
                         "Chords {0}/{1}: Restricted leap in {2} - over an octave".
                             format(i+1, i+2, voice))
-
         if err_count:
             errs.sort()
             self.err_count += err_count
             self.err_detailed.append(("Restricted leaps", err_count, errs))
-            
+    
     def check_distances(self):
         # checking each chord for too high distances between voices and 
         # too low distances (overlaps == crossing voices)
@@ -303,7 +303,6 @@ class Piece(object):
             elif self.alto[i].midi_number - self.tenor[i].midi_number < 0:
                 err_count += 1
                 errs.append("Chord {0}: T/B overlap".format(i+1))
-        
         if err_count:
             self.err_count += err_count
             self.err_detailed.append(
@@ -457,6 +456,7 @@ class Piece(object):
 
 
     def check_chords_in_context(self):
+        # Not yet implemented
         pass
 
 
@@ -471,6 +471,3 @@ def make_piece(music_piece):
     piece = Piece(music_piece)
     return piece
     
-    
-
-

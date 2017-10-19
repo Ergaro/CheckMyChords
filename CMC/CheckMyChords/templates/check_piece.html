@@ -11,7 +11,6 @@
 	CMC - check piece
 {% endblock %}
 
-
 {% block content %}
 	<h1>CMC - checked piece: {{ piece.title }} in {{ piece.key_hr}}</h1>
 	<div>
@@ -21,14 +20,6 @@
 			<li> T: {{ piece.parts_hr.T|spacify}} </li>
 			<li> B: {{ piece.parts_hr.B|spacify}} </li>
 		</ul>
-	</div>
-	<div>
-		<a class = "midigen" id="midigen_{{piece.pk}}" 
-							data-piece="{{piece.pk}}" href= "" download>
-			<button type="button">
-			Generate MIDI file
-			</button>
-		</a>
 	</div>
 	<div>
 		<h3>Total errors: {{ piece.err_count }}</h3>

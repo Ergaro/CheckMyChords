@@ -18,5 +18,6 @@ def NotesValidator(input):
         raise ValidationError("Wrong notation")
     
 def KeyValidator(input):
+    # Not yet implemented (will be used to validate key given by the user
     pass
     

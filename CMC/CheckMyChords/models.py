@@ -1,8 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
 class MusicPiece(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=64)
@@ -13,8 +11,4 @@ class MusicPiece(models.Model):
     # TODO:
     # add a CharField storing a key
     # add a filefield? (and store a midi?)
-    
-    
-    
-    
-    
+

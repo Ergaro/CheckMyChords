@@ -1,32 +1,25 @@
-from django.shortcuts import render
+import os
+
 from django.http.response import (
     HttpResponse, 
     HttpResponseRedirect,
     JsonResponse,
 )
+from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from pyknon.genmidi import Midi
+from pyknon.music import NoteSeq
+
+from CMC.settings import MEDIA_ROOT, MEDIA_URL
 from .forms import (
     NewPieceForm,
     SelectRulesForm
 )
-from .models import (
-    MusicPiece
-)
 from .harmony_rules import check_harmony_rules, make_piece
-from pyknon.genmidi import Midi
-from pyknon.music import NoteSeq
+from .models import MusicPiece
 
-import os
-from CMC.settings import MEDIA_ROOT, MEDIA_URL
-
-# Create your views here.
-
-class HelloWorldView(View):
-    def get(self, request):
-        return HttpResponse('Hello world!')
-    
 
 class AddPieceView(View):
     # Lets You add a new piece manually, strings as an input
@@ -45,6 +38,7 @@ class AddPieceView(View):
             return render(request, 'new_piece.html', {'form':form})
     
 class PiecesView(View):
+    # Shows all pieces from db, enables checking them and downloading MIDI
     def get(self, request):
         
         ctx = {
@@ -53,6 +47,7 @@ class PiecesView(View):
         return render(request, 'pieces.html', ctx)
 
 class CheckPieceView(View):
+    # Shows if piece is correct, according to basic harmony rules
     def get(self, request, piece_id):
         piece = MusicPiece.objects.get(id=piece_id)
         checked_piece = check_harmony_rules(piece)
@@ -88,3 +83,4 @@ class GenerateMidiView(View):
             m.write(os.path.join(MEDIA_ROOT, filename))
         url = os.path.join(MEDIA_URL, filename)
         return JsonResponse({"url": url})
+

@@ -1,13 +1,10 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from pyknon.music import NoteSeq
 
-from .models import (
-    MusicPiece
-)
+from .models import MusicPiece
 from .validators import NotesValidator
-from django.core.exceptions import ValidationError
-
 
 
 class NewPieceForm(forms.Form):
@@ -23,6 +20,7 @@ class NewPieceForm(forms.Form):
     #        (just need to change numbers to ' or ,-s)
 
     def clean(self):
+        # Validates if all parts in the input have the same length
         cleaned_data = super(NewPieceForm, self).clean()
         try:
             s = len(NoteSeq(cleaned_data['soprano']))
@@ -39,6 +37,7 @@ class NewPieceForm(forms.Form):
         return cleaned_data
     
 class SelectRulesForm(forms.Form):
+    # Determines which harmony rules will be used in check_harmony method
     RULES = (
         ("RANGE", 'Default voice ranges'),
         ("LEAPS", 'Leaps of a seventh or above octave forbidden'),
@@ -51,3 +50,4 @@ class SelectRulesForm(forms.Form):
         choices=RULES,
         widget=forms.CheckboxSelectMultiple(attrs={'checked' : 'checked'})
     )
+
