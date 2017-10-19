@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from CheckMyChords.views import (
     HelloWorldView,
     AddPieceView,
     CheckPieceView,
     PiecesView,
+    GenerateMidiView,
 )
 
 
@@ -31,4 +34,8 @@ urlpatterns = [
     url(r'^check_piece/(?P<piece_id>(\d)+)$', CheckPieceView.as_view(),
         name = 'check_piece' ),
     url(r'^$', PiecesView.as_view(), name = 'pieces'),
+    url(r'^generate_midi/(?P<piece_id>(\d)+)$', GenerateMidiView.as_view(),
+        name = "generate_midi"),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

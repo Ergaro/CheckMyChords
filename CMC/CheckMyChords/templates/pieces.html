@@ -1,14 +1,29 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{% static 'midigen.js' %}"></script>
+{% endblock %}
+
+
 {% block content %}
 	<h1>CheckMyChords - pieces in the database:</h1>
 	<h3>Click on a title to check the piece!</h3>
     <ul>
 	{% for piece in pieces %}
 		<li>
+			{{ piece.title }}
+			(added: {{ piece.date_added}})
 			<a href="{% url 'check_piece' piece.id %}">
-				{{ piece.title }}
-			</a>  (added: {{ piece.date_added}})
+			<button type="button" >
+			Check harmony!
+			</button></a>
+			<a class = "midigen" id="midigen_{{piece.pk}}" 
+							data-piece="{{piece.pk}}" href= "" download>
+			<button type="button">
+			Generate MIDI file
+			</button></a>
 		</li>
 	{% endfor %}
 	</ul>

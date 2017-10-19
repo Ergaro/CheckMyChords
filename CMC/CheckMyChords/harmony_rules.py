@@ -162,6 +162,17 @@ class Piece(object):
             result[voice] = "|" + part.to_hrstr + "||"
         return result
     
+    @property
+    def key_hr(self):
+        if None in self.key:
+            return "Unknown key"
+        else:
+            result =" ".join((
+                ("C","C#","D","D#","E","F","F#","G","G#","A",
+                                                        "A#","B")[self.key[0]],
+                ("minor", "major")[self.key[1]]
+            ))
+            return result
     
     def read_chords(self):
         # converts noteSeqs to chords
@@ -434,9 +445,6 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chord {0}: more than one seventh in the chord".
                                     format(idx))
-
-                
-                
         if err_count:
             self.err_count += err_count
             self.err_detailed.append(("Unnown chords", err_count, errs))
@@ -456,6 +464,11 @@ class Piece(object):
 def check_harmony_rules(music_piece, rules=['ALL']):
     piece = Piece(music_piece)
     piece.check_harmony(rules)
+    return piece
+
+def make_piece(music_piece):
+    # turns a Music_Piece object into a Piece object (without checking rules)
+    piece = Piece(music_piece)
     return piece
     
     

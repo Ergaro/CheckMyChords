@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% load poll_extras %}
 
+{% block scripts %}
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{% static 'midigen.js' %}"></script>
+{% endblock %}
+
 {% block title %}
 	CMC - check piece
 {% endblock %}
 
 
 {% block content %}
-	<h1>CMC - checked piece: {{ piece.title }}</h1>
+	<h1>CMC - checked piece: {{ piece.title }} in {{ piece.key_hr}}</h1>
 	<div>
 		<ul style="font-family: monospace;">
 			<li> S: {{ piece.parts_hr.S|spacify}} </li>
@@ -15,6 +21,14 @@
 			<li> T: {{ piece.parts_hr.T|spacify}} </li>
 			<li> B: {{ piece.parts_hr.B|spacify}} </li>
 		</ul>
+	</div>
+	<div>
+		<a class = "midigen" id="midigen_{{piece.pk}}" 
+							data-piece="{{piece.pk}}" href= "" download>
+			<button type="button">
+			Generate MIDI file
+			</button>
+		</a>
 	</div>
 	<div>
 		<h3>Total errors: {{ piece.err_count }}</h3>
