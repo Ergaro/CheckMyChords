@@ -14,9 +14,9 @@ def NotesValidator(input):
     elif 'r' in input or 'R' in input:
         raise ValidationError("Rests not allowed!")
     elif re.search(r"[^a-gA-G#,' ]", input) is not None:
+        print("I have found an error!")
         raise ValidationError("Wrong notation")
     
 def KeyValidator(input):
     pass
     
-# add a validator to check if lengths of the parts match

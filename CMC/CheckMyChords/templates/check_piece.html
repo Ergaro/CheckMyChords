@@ -52,11 +52,13 @@
 		</div>
 		{% endif %}
 	</div>
+	<br>
 	</div>
-		<h4>Specify which rules you want to use:</h4>
-		form:
-		Checkboxes here...
-		send form (action post to the same url)
+		<h3>Specify which rules you want to use and check the piece again:</h3>
+		<form method = 'post'>
+		{% csrf_token %}
+		{{ form.as_p}}
+		<input type= submit>
 	</div>
 {% endblock %}
 

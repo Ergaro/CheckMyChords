@@ -23,15 +23,31 @@ class NewPieceForm(forms.Form):
     #        (just need to change numbers to ' or ,-s)
 
     def clean(self):
-        # enforces equal length of each part
         cleaned_data = super(NewPieceForm, self).clean()
-        s = len(NoteSeq(cleaned_data['soprano']))
-        a = len(NoteSeq(cleaned_data['alto']))
-        t = len(NoteSeq(cleaned_data['tenor']))
-        b = len(NoteSeq(cleaned_data['bass']))
-        
-        if not (s == a == t == b != 0):
-            raise ValidationError("All parts must have the same length" + 
-                                  " and have more than 0 notes")
-        
-        return(cleaned_data)
+        try:
+            s = len(NoteSeq(cleaned_data['soprano']))
+            a = len(NoteSeq(cleaned_data['alto']))
+            t = len(NoteSeq(cleaned_data['tenor']))
+            b = len(NoteSeq(cleaned_data['bass']))
+            print([s,a,t,b])
+            if not (s == a == t == b != 0):
+                msg = ValidationError("All parts must have the same length" + 
+                                    " and have more than 0 notes")
+                self.add_error(None, msg)
+        except Exception:
+            pass
+        return cleaned_data
+    
+class SelectRulesForm(forms.Form):
+    RULES = (
+        ("RANGE", 'Default voice ranges'),
+        ("LEAPS", 'Leaps of a seventh or above octave forbidden'),
+        ("DISTANCES", 'Distances allowed: S/A - max 8, A/T - less than 8, T/B - preferably below 12, max 15'),
+        ("PARALELS", '(Anti)consecutive unisons, perfect fifths and octaves forbidden'),
+        ("CHORDS", "Chords - in implementation"),
+        ("CHORDS_IN_CTX", "Chords (in musical context) -Not yet implemented")
+    )  
+    rules = forms.MultipleChoiceField(
+        choices=RULES,
+        widget=forms.CheckboxSelectMultiple(attrs={'checked' : 'checked'})
+    )

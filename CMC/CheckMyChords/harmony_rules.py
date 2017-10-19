@@ -23,7 +23,7 @@ class Chord(object):
         self.root = None  # int 0-11 or None
         self.mode = None  # 'M', 'm', 'M7', 'm7' or None
         self.structure = {"S": None,  # as intervals from the root
-                          "A": None,  # in "standard" notation (e.g. 5 = fifth)
+                          "A": None,  # in "standard" notation (e.g. 5==fifth)
                           "T": None,  # None == 'not recognised'
                           "B": None} 
         self.read_chord()
@@ -161,9 +161,8 @@ class Piece(object):
         for voice, part in self.parts.items():
             result[voice] = "|" + part.to_hrstr + "||"
         return result
-            
     
-        
+    
     def read_chords(self):
         # converts noteSeqs to chords
         for i in range(len(self.soprano)):
@@ -188,18 +187,23 @@ class Piece(object):
             self.key[1] = 0 
         else:
             self.key[1] = 1  # major as a fallback value
-
-
-
-
-    def check_harmony(self):
+    
+    
+    def check_harmony(self, rules=['ALL']):
         # main method for checking harmony of a piece, should call methods
         # for checking each rule
-        self.check_range()  
-        self.check_intervals()
-        self.check_distances()
-        self.check_paralels()
-        self.check_chords()
+        if 'ALL' in rules or 'RANGE' in rules:
+            self.check_range()
+        if 'ALL' in rules or 'LEAPS' in rules:
+            self.check_leaps()
+        if 'ALL' in rules or 'DISTANCES' in rules:
+            self.check_distances()
+        if 'ALL' in rules or 'PARALELS' in rules:
+            self.check_paralels()
+        if 'ALL' in rules or 'CHORDS' in rules:
+            self.check_chords()
+        if 'ALL' in rules or "CHORDS_IN_CTX" in rules:
+            self.check_chords_in_context()
         
     # Methods checking individual rules. Each method should:
     # Increase self.err_count by number of mistakes found
@@ -231,7 +235,7 @@ class Piece(object):
             self.err_count += err_count
             self.err_detailed.append(("Voice range errors", err_count, errs))
 
-    def check_intervals(self):
+    def check_leaps(self):
         # checking for restricted intervals: leaps of a 7th, or >=9th
         err_count = 0
         errs = []
@@ -248,15 +252,15 @@ class Piece(object):
                                 format(i+1, i+2, voice))
                 elif distance > 12:
                     err_count +=1
-                    errs.append("Chords {0}/{1}: Restricted leap in {2} - over an octave".
-                                format(i+1, i+2, voice))
+                    errs.append(
+                        "Chords {0}/{1}: Restricted leap in {2} - over an octave".
+                            format(i+1, i+2, voice))
 
         if err_count:
             errs.sort()
             self.err_count += err_count
             self.err_detailed.append(("Restricted leaps", err_count, errs))
             
-
     def check_distances(self):
         # checking each chord for too high distances between voices and 
         # too low distances (overlaps == crossing voices)
@@ -291,19 +295,19 @@ class Piece(object):
         
         if err_count:
             self.err_count += err_count
-            self.err_detailed.append(("Voice distance errors", err_count, errs))
+            self.err_detailed.append(
+                ("Voice distance errors", err_count, errs)
+            )
         if war_count:
             self.war_count += war_count
-            self.war_detailed.append(("Voice distance warnings", war_count, wars))
-        
-        
-
+            self.war_detailed.append(
+                ("Voice distance warnings", war_count, wars)
+            )
+    
     def check_paralels(self):
         # checking for restricted (anti)consecutive intervals (1, 5, 8)
         err_count = 0
         errs = []
-        war_count = 0
-        wars = []
         for i in range(len(self.soprano)-1):
             s1 = self.soprano[i].midi_number
             s2 = self.soprano[i+1].midi_number
@@ -323,61 +327,61 @@ class Piece(object):
             if s1 != s2 and a1 != a2:
                 if (s1 - a1) % 12 == 0 and (s2 - a2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/A consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: S/A consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif s1 - a1 in (7, 19, 31) and s2 - a2 in (7, 19, 31):
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/A consecutive Fifths".
+                    errs.append("Chords {0}/{1}: S/A consecutive Fifths".
                                 format(i+1, i+2))
             
             if s1 != s2 and t1 != t2:
                 if (s1 - t1) % 12 == 0 and (s2 - t2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/T consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: S/T consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif s1 - t1 in (7, 19, 31, 43) and s2 - t2 in (7, 19, 31, 43):
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/T consecutive Fifths".
+                    errs.append("Chords {0}/{1}: S/T consecutive Fifths".
                                 format(i+1, i+2))
                     
             if s1 != s2 and b1 != b2:
                 if (s1 - b1) % 12 == 0 and (s2 - b2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/B consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: S/B consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif s1 - b1 in (7, 19, 31, 43) and s2 - b2 in (7, 19, 31, 43):
                     err_count += 1
-                    errs.append("Chords {0}{1} : S/B consecutive Fifths".
+                    errs.append("Chords {0}/{1}: S/B consecutive Fifths".
                                 format(i+1, i+2))
 
             if a1 != a2 and t1 != t2:
                 if (a1 - t1) % 12 == 0 and (a2 - t2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : A/T consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: A/T consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif a1 - t1 in (7, 19, 31) and a2 - t2 in (7, 19, 31):
                     err_count += 1
-                    errs.append("Chords {0}{1} : A/T consecutive Fifths".
+                    errs.append("Chords {0}/{1}: A/T consecutive Fifths".
                                 format(i+1, i+2))
                     
             if a1 != a2 and b1 != b2:
                 if (a1 - b1) % 12 == 0 and (a2 - b2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : A/B consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: A/B consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif a1 - b1 in (7, 19, 31, 43) and a2 - b2 in (7, 19, 31, 43):
                     err_count += 1
-                    errs.append("Chords {0}{1} : A/B consecutive Fifths".
+                    errs.append("Chords {0}/{1}: A/B consecutive Fifths".
                                 format(i+1, i+2))
                     
             if t1 != t2 and b1 != b2:
                 if (t1 - b1) % 12 == 0 and (t2 - b2) % 12 == 0:
                     err_count += 1
-                    errs.append("Chords {0}{1} : T/B consecutive Unison/Octave".
+                    errs.append("Chords {0}/{1}: T/B consecutive Unison/Octave".
                                 format(i+1, i+2))
                 elif t1 - b1 in (7, 19, 31) and t2 - b2 in (7, 19, 31):
                     err_count += 1
-                    errs.append("Chords {0}{1} : T/B consecutive Fifths".
+                    errs.append("Chords {0}/{1}: T/B consecutive Fifths".
                                 format(i+1, i+2))
                     
         if err_count:
@@ -386,16 +390,72 @@ class Piece(object):
 
     def check_chords(self):
         # checking for wrong chords (unrecognisable, or wrong dubling)
+        # if chord is unrecognisable, other conditions aren't checked
+        # e.g - chord c,d,e,g, will get warning (d doesn't belong to C chord)
+        # but c,d,g,c will not get warning, but will get an error - 
+        # chord mode unknown) 
+        err_count = 0
+        errs = []
+        war_count = 0
+        wars = []
+        for idx, chord in enumerate(self.chords, 1):
+            if chord.mode == None:
+                err_count += 1
+                errs.append("Chord {0}: Chord mode unknown".format(idx))
+            else:  
+                roots = 0
+                thirds = 0
+                fifths = 0
+                sevenths = 0
+                for voice, interval in chord.structure.items():
+                    if interval == "1":
+                        roots += 1
+                    elif interval == "3>" or interval == "3":
+                        thirds += 1
+                    elif interval == "5":
+                        fifths += 1
+                    elif interval == "7":
+                        sevenths += 1
+                    else:
+                        war_count += 1
+                        wars.append(
+                            "Chord {0}: {1} note doesn't belong to the chord".
+                                format(idx, voice)
+                        )
+                if thirds > 1:
+                    war_count += 1
+                    wars.append("Chord {0}: more than one third in the chord".
+                                    format(idx))
+                elif fifths >1:
+                    war_count += 1
+                    wars.append("Chord {0}: more than one fifth in the chord".
+                                    format(idx))
+                elif sevenths > 1:
+                    err_count += 1
+                    errs.append("Chord {0}: more than one seventh in the chord".
+                                    format(idx))
+
+                
+                
+        if err_count:
+            self.err_count += err_count
+            self.err_detailed.append(("Unnown chords", err_count, errs))
+        
+        if war_count:
+            self.war_count += war_count
+            self.war_detailed.append(
+                ("Foreign notes in chords and wrong doubling", war_count, wars)
+            )
+
+
+    def check_chords_in_context(self):
         pass
 
 
 
-
-
-
-def check_harmony_rules(music_piece):
+def check_harmony_rules(music_piece, rules=['ALL']):
     piece = Piece(music_piece)
-    piece.check_harmony()
+    piece.check_harmony(rules)
     return piece
     
     

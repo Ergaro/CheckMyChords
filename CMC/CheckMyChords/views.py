@@ -5,6 +5,7 @@ from django.views import View
 
 from .forms import (
     NewPieceForm,
+    SelectRulesForm
 )
 from .models import (
     MusicPiece
@@ -19,7 +20,7 @@ class HelloWorldView(View):
     
 
 class AddPieceView(View):
-    # Lets You add a new piece manually, Strings as an input
+    # Lets You add a new piece manually, strings as an input
     def get(self, request):
         form = NewPieceForm()
         return render(request, 'new_piece.html', {'form':form})
@@ -45,9 +46,19 @@ class CheckPieceView(View):
     def get(self, request, piece_id):
         piece = MusicPiece.objects.get(id=piece_id)
         checked_piece = check_harmony_rules(piece)
-        return render(request, 'check_piece.html', {'piece': checked_piece})
+        return render(request, 'check_piece.html', {'piece': checked_piece,
+                                                    'form': SelectRulesForm()})
     
     def post(self, request, piece_id):
         # Check the piece, but only using the rules chosen in form
-        pass
+        form = SelectRulesForm(request.POST)
+        if form.is_valid():
+            piece = MusicPiece.objects.get(id=piece_id)
+            rules = form.cleaned_data['rules']
+            checked_piece = check_harmony_rules(piece, rules)
+            return render(request, 
+                          'check_piece.html', 
+                          {'piece':checked_piece, 'form' : SelectRulesForm()})
+
+        
 
