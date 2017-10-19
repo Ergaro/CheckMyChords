@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from CheckMyChords.views import (
-    HelloWorldView,
     AddPieceView,
     CheckPieceView,
     PiecesView,
@@ -28,7 +27,6 @@ from CheckMyChords.views import (
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hello_world$', HelloWorldView.as_view()),
     
     url(r'^new_piece$', AddPieceView.as_view(), name="add_new_piece"),
     url(r'^check_piece/(?P<piece_id>(\d)+)$', CheckPieceView.as_view(),

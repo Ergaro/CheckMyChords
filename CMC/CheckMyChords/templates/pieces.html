@@ -13,7 +13,7 @@
 	{% for piece in pieces %}
 		<li>
 			{{ piece.title }}
-			(added: {{ piece.date_added}})
+			<small>(added: {{ piece.date_added}})</small>
 			<a href="{% url 'check_piece' piece.id %}">
 			<button type="button" >
 			Check harmony!

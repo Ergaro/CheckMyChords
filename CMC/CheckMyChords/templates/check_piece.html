@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 {% load poll_extras %}
 
-{% block scripts %}
-{% load static %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="{% static 'midigen.js' %}"></script>
-{% endblock %}
-
 {% block title %}
 	CMC - check piece
 {% endblock %}
@@ -63,7 +57,7 @@
 		<form method = 'post'>
 		{% csrf_token %}
 		{{ form.as_p}}
-		<input type= submit>
+		<input type= submit value="Aplly selected rules">
 	</div>
 {% endblock %}
 

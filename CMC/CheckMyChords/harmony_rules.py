@@ -456,7 +456,7 @@ class Piece(object):
 
 
     def check_chords_in_context(self):
-        # Not yet implemented
+        # not yet implemented
         pass
 
 
