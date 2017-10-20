@@ -6,12 +6,20 @@
 
 {% block content %}
 	<h1>CMC - add a new piece:</h1>
-		<form method = 'post'>
+	<div>
+	<form method = 'post'>
 		{% csrf_token %}
 		<table>
 		{{ form.as_table}}
 		</table>
 		<input type= submit value="Add piece">
 	</form>
+	</div>
+	<br><br>
+	<div>
+	    <a href="{% url 'pieces' %}">
+			<button type="button">Return</button>
+		</a>
+	</div>
 {% endblock %}
 

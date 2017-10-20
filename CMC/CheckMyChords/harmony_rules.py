@@ -3,6 +3,7 @@ from pyknon.music import Note, NoteSeq
 
 from .models import MusicPiece
 from .pyknon_extension import *  
+from _ast import Num
 
 
 class Chord(object):
@@ -126,6 +127,54 @@ class Chord(object):
         else:  # no third in a chord (or find_structure failed)
             self.mode = None
 
+    def harmonic_function(self, key):
+        # Tonic must be of correct mode
+        # Tonic6 must be of oposite mode (a minor in C major key)
+        # Allows both minor and major subdominants in minor and major keys
+        # Allows minor and major dominants in minor keys
+        # Allows only major dominant in major keys
+        # Allows sevenths in dominant only ("D7")
+        # harm_fs = ("T", "S", "D", "D7", "T6")
+        # NOTE - this method will recognise function if foreign notes are
+        # present (C E F# G) will be recognised as a Tonic in C major,
+        # but (C E G Bb) won't
+        if self.root == key[0]:
+            if key[1] == 1 and self.mode == "M":  # major
+                return "T" 
+            elif key[1] == 0 and self.mode =='m': # minor
+                return "T"
+            else:
+                return ""  # unrecognised chord or seventh present
+        elif (self.root - key[0]) % 12 == 5:
+            if self.mode in ("M", "m"):
+                return "S"
+            else:
+                return ""
+        elif (self.root - key[0]) % 12 == 7:
+            if key[1] == 1 and self.mode == "M":
+                return "D"
+            elif key[1] == 1 and self.mode == "M7":
+                return "D7"
+            elif key[1] == 0 and self.mode in ("M", "m"): 
+                return "D"
+            elif key[1] == 0 and self.mode in ("M7", "m7"):
+                return "D7"
+            else:
+                return ""
+        elif (self.root - key[0]) % 12 == 8:  #6th in minor scale
+            if self.mode == "M":
+                return "TVI"
+            else:
+                return ""
+        elif (self.root - key[0]) % 12 == 9:  #6th in major key
+            if self.mode == "m":
+                return "TVI"
+            else:
+                return ""
+        else:
+            return ""
+
+        
 
 class Piece(object):
     # A class analogous to MusicPiece, but stores parts as NoteSeqs objects
@@ -175,6 +224,30 @@ class Piece(object):
                 ("minor", "major")[self.key[1]]
             ))
             return result
+        
+    @property
+    def functions_hr(self):
+        # gives harmonic functions set to print under score (compatible with
+        # parts_hr)
+        result = "|"
+        for chord in self.chords:
+            ch = chord.harmonic_function(self.key)
+            while len(ch) < 4:
+                ch += " "  # ensures correct spacing
+            result += ch
+        result = result[:-1] + "||"
+        return result
+    
+    @property
+    def chord_n_hr(self):
+        # chord numbers to print above score (compatible with parts_hr)
+        result = " "
+        for idx in enumerate(self.chords, 1):
+            num = str(idx[0])
+            while len(num) < 4:
+                num += " "
+            result += num
+        return result
     
     def read_chords(self):
         # converts noteSeqs to chords
@@ -300,7 +373,7 @@ class Piece(object):
             elif self.tenor[i].midi_number - self.bass[i].midi_number > 19:
                 war_count += 1
                 wars.append("Chord {0}: T/B interval to wide".format(i+1))
-            elif self.alto[i].midi_number - self.tenor[i].midi_number < 0:
+            elif self.tenor[i].midi_number - self.bass[i].midi_number < 0:
                 err_count += 1
                 errs.append("Chord {0}: T/B overlap".format(i+1))
         if err_count:
@@ -432,7 +505,7 @@ class Piece(object):
                             "Chord {0}: {1} note doesn't belong to the chord".
                                 format(idx, voice)
                         )
-                if thirds > 1:
+                if thirds > 1 and (not chord.harmonic_function(self.key) == "TVI"):
                     war_count += 1
                     wars.append("Chord {0}: more than one third in the chord".
                                     format(idx))
@@ -456,7 +529,10 @@ class Piece(object):
 
 
     def check_chords_in_context(self):
-        # not yet implemented
+        err_count = 0
+        errs = []
+        war_count = 0
+        wars = []
         pass
 
 

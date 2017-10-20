@@ -6,13 +6,15 @@
 {% endblock %}
 
 {% block content %}
-	<h1>CMC - checked piece: {{ piece.title }} in {{ piece.key_hr}}</h1>
+	<h1>CMC - checked piece:<br>{{ piece.title }} in {{ piece.key_hr}}</h1>
 	<div>
 		<ul style="font-family: monospace;">
-			<li> S: {{ piece.parts_hr.S|spacify}} </li>
-			<li> A: {{ piece.parts_hr.A|spacify}} </li>
-			<li> T: {{ piece.parts_hr.T|spacify}} </li>
-			<li> B: {{ piece.parts_hr.B|spacify}} </li>
+			<li> n: {{ piece.chord_n_hr|spacify }} </li>
+			<li> S: {{ piece.parts_hr.S|spacify }} </li>
+			<li> A: {{ piece.parts_hr.A|spacify }} </li>
+			<li> T: {{ piece.parts_hr.T|spacify }} </li>
+			<li> B: {{ piece.parts_hr.B|spacify }} </li>
+			<li> f: {{ piece.functions_hr|spacify }} </li>
 		</ul>
 	</div>
 	<div>
@@ -58,6 +60,12 @@
 		{% csrf_token %}
 		{{ form.as_p}}
 		<input type= submit value="Aplly selected rules">
+	</div>
+	<br><br>
+	<div>
+	    <a href="{% url 'pieces' %}">
+			<button type="button">Return</button>
+		</a>
 	</div>
 {% endblock %}
 
