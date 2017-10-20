@@ -533,7 +533,13 @@ class Piece(object):
         errs = []
         war_count = 0
         wars = []
-        pass
+        war_count += 1
+        wars.append("Checking chords in context not yet implemented!")
+        
+        self.war_count += war_count
+        self.war_detailed.append(
+            ("Checking chords in context", war_count, wars)
+        )
 
 
 
