@@ -9,7 +9,7 @@ CMC uses pyknon library (https://github.com/kroger/pyknon)
 
 # License
 
-This library is released under a MIT license. See the [LICENSE](LICENSE) file for
+This library is released under a MIT license. See the [LICENSE](LICENSE.md) file for
 more details.
 
 
