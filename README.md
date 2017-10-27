@@ -1,5 +1,7 @@
 # Introduction
 
+CMC v. 0.1.0
+
 CheckMyChords is a simple Django app that enables user to add short choral sequences to database and check if they obey some basic harmony rules.
 The piece can be checked using some (or all) selected rules. The rules covered so far include:
 * Natural vocal ranges of voices
@@ -27,11 +29,6 @@ CMC uses pyknon library (https://github.com/kroger/pyknon)
   * All voices going in the same direction
   * Add more recognised chords (Dvii, D9>, D64)
   * Checking chords in context (e.g. subdominant shouldn't occur after a dominant)
-* Implement Users
-  * Registration, logging in/out, 
-  * Only logged users should be able to add new pieces
-  * Added pieces could be marked as private or public 
-  * User should see only own pieces, and pieces marked as public
 * Add tests and demo
 * Limit pyknon libraty usage to midi generation and write own Note class instead, that should distinguish enharmonic equivalent notes. Currently it's impossible and that leads to major problems - e.g. treating (D, E#, A) as a legitimate D minor chord, which makes some harmonic rules impossible to implement.
 
