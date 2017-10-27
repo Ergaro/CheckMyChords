@@ -16,7 +16,7 @@ def NotesValidator(input):
     elif re.search(r"[^a-gA-G#,' ]", input) is not None:
         print("I have found an error!")
         raise ValidationError("Wrong notation")
-    
+
 def KeyValidator(input):
     # Not yet implemented (will be used to validate key given by the user
     pass

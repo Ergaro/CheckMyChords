@@ -3,8 +3,8 @@ from django.core.exceptions import ValidationError
 
 from pyknon.music import NoteSeq
 
-from .models import MusicPiece
-from .validators import NotesValidator
+from CheckMyChords.models import MusicPiece
+from CheckMyChords.validators import NotesValidator
 
 
 class NewPieceForm(forms.Form):

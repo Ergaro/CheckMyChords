@@ -18,19 +18,19 @@ from pyknon.genmidi import Midi
 from pyknon.music import NoteSeq
 
 from CMC.settings import MEDIA_ROOT, MEDIA_URL
-from .forms import (
+from CheckMyChords.forms import (
     NewPieceForm,
     SelectRulesForm
 )
-from .harmony_rules import check_harmony_rules, make_piece
-from .models import MusicPiece
+from CheckMyChords.harmony_rules import check_harmony_rules, make_piece
+from CheckMyChords.models import MusicPiece
 
 
 class SignUpView(View):
     def get(self, request):
         form = UserCreationForm()
         return render(request, 'signup.html', {"form": form})
-
+    
     def post(self, request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -54,7 +54,7 @@ class AddPieceView(LoginRequiredMixin, View):
     def get(self, request):
         form = NewPieceForm()
         return render(request, 'new_piece.html', {'form':form})
- 
+    
     def post(self, request):
         form = NewPieceForm(request.POST)
         if form.is_valid():
@@ -66,7 +66,7 @@ class AddPieceView(LoginRequiredMixin, View):
             )
         else:
             return render(request, 'new_piece.html', {'form':form})
-    
+
 class PiecesView(View):
     # Shows all pieces from db, enables checking them and downloading MIDI
     def get(self, request):

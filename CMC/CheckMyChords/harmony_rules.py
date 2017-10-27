@@ -1,9 +1,8 @@
 # Stores classes & functions needed to check harmony of a piece
 from pyknon.music import Note, NoteSeq
 
-from .models import MusicPiece
-from .pyknon_extension import *  
-from _ast import Num
+from CheckMyChords.models import MusicPiece
+from CheckMyChords.pyknon_extension import *
 
 
 class Chord(object):
@@ -28,7 +27,7 @@ class Chord(object):
                           "T": None,  # None == 'not recognised'
                           "B": None} 
         self.read_chord()
-        
+    
     def __str__(self):
         return "S:{s}, A:{a}, T:{t}, B:{b}".format(
             s = self.soprano.to_str,
@@ -53,7 +52,7 @@ class Chord(object):
         # finding root
         #   ifs' condtions ordered by decreasing "importance"
         #     I. looking for a fifth (including crossed voices)
- 
+        
         if (t-b) in (7, 19, 31) \
                 or (a-b) in (7, 19, 31, 43) \
                 or (s-b) in (7, 19, 31, 43):
@@ -126,7 +125,7 @@ class Chord(object):
             self.mode = "M7" if "7" in self.structure.values() else "M"
         else:  # no third in a chord (or find_structure failed)
             self.mode = None
-
+    
     def harmonic_function(self, key):
         # Tonic must be of correct mode
         # Tonic6 must be of oposite mode (a minor in C major key)
@@ -174,7 +173,6 @@ class Chord(object):
         else:
             return ""
 
-        
 
 class Piece(object):
     # A class analogous to MusicPiece, but stores parts as NoteSeqs objects
@@ -203,7 +201,7 @@ class Piece(object):
         self.war_detailed = []
         self.read_chords()
         self.set_key()
-
+    
     @property
     def parts_hr(self):
         # human-readable representation of the part
@@ -224,7 +222,7 @@ class Piece(object):
                 ("minor", "major")[self.key[1]]
             ))
             return result
-        
+    
     @property
     def functions_hr(self):
         # gives harmonic functions set to print under score (compatible with
@@ -257,7 +255,7 @@ class Piece(object):
                           self.tenor[i], 
                           self.bass[i])
             self.chords.append(chord)
-
+    
     def set_key(self):
         # method dentifies key (basing on the first chord)
         # key is stored as a touple - first element determinines the tonic,
@@ -289,7 +287,7 @@ class Piece(object):
             self.check_chords()
         if 'ALL' in rules or "CHORDS_IN_CTX" in rules:
             self.check_chords_in_context()
-        
+    
     # Methods checking individual rules. Each method should:
     # Increase self.err_count by number of mistakes found
     # Append a 3-element touple to self.err_detailed, matching the pattern:
@@ -426,7 +424,7 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chords {0}/{1}: S/T consecutive Fifths".
                                 format(i+1, i+2))
-                    
+            
             if s1 != s2 and b1 != b2:
                 if (s1 - b1) % 12 == 0 and (s2 - b2) % 12 == 0:
                     err_count += 1
@@ -436,7 +434,7 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chords {0}/{1}: S/B consecutive Fifths".
                                 format(i+1, i+2))
-
+            
             if a1 != a2 and t1 != t2:
                 if (a1 - t1) % 12 == 0 and (a2 - t2) % 12 == 0:
                     err_count += 1
@@ -446,7 +444,7 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chords {0}/{1}: A/T consecutive Fifths".
                                 format(i+1, i+2))
-                    
+            
             if a1 != a2 and b1 != b2:
                 if (a1 - b1) % 12 == 0 and (a2 - b2) % 12 == 0:
                     err_count += 1
@@ -456,7 +454,7 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chords {0}/{1}: A/B consecutive Fifths".
                                 format(i+1, i+2))
-                    
+            
             if t1 != t2 and b1 != b2:
                 if (t1 - b1) % 12 == 0 and (t2 - b2) % 12 == 0:
                     err_count += 1
@@ -466,11 +464,11 @@ class Piece(object):
                     err_count += 1
                     errs.append("Chords {0}/{1}: T/B consecutive Fifths".
                                 format(i+1, i+2))
-                    
+            
         if err_count:
             self.err_count += err_count
             self.err_detailed.append(("Consecutive intervals", err_count, errs))
-
+    
     def check_chords(self):
         # checking for wrong chords (unrecognisable, or wrong dubling)
         # if chord is unrecognisable, other conditions aren't checked
@@ -526,8 +524,7 @@ class Piece(object):
             self.war_detailed.append(
                 ("Foreign notes in chords and wrong doubling", war_count, wars)
             )
-
-
+    
     def check_chords_in_context(self):
         err_count = 0
         errs = []
@@ -535,12 +532,10 @@ class Piece(object):
         wars = []
         war_count += 1
         wars.append("Checking chords in context not yet implemented!")
-        
         self.war_count += war_count
         self.war_detailed.append(
             ("Checking chords in context", war_count, wars)
         )
-
 
 
 def check_harmony_rules(music_piece, rules=['ALL']):
