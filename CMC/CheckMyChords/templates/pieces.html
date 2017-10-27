@@ -2,12 +2,16 @@
 
 {% block scripts %}
 {% load static %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
 <script src="{% static 'midigen.js' %}"></script>
 {% endblock %}
 
-{% block content %}
+{% block header %}
 	<h1>CheckMyChords - pieces in the database:</h1>
+{% endblock %}
+
+{% block content %}
 	<h3>Click on a button to check selected piece!</h3>
     <ul>
 	{% for piece in pieces %}
@@ -19,15 +23,17 @@
 			Check harmony!
 			</button></a>
 			<a class = "midigen" id="midigen_{{piece.pk}}" 
-							data-piece="{{piece.pk}}" href= "" download>
+							data-piece="{{piece.pk}}" href= "">
 			<button type="button">
 			Generate MIDI file
 			</button></a>
 		</li>
 	{% endfor %}
 	</ul>
-	<a href="{% url 'add_new_piece' %}">
-	<button type="button">Add new piece!</button>
+	{% if user.is_authenticated %}
+		<a href="{% url 'add_new_piece' %}">
+		<button type="button">Add new piece!</button>
+	{% endif %}
 	</a>
 {% endblock %}
 

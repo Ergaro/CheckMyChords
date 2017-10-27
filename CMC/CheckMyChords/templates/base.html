@@ -1,27 +1,55 @@
 <!doctype html>
 <html>
     <head>
-    	<title>{% block title %} CheckMyChords {% endblock %}</title>
-	    <meta charset="utf-8">
-	    <style>
-			body {
-				background-color: #101010;
-				color: #F0F0F0;
-			}
-		</style>
-		{% block scripts %}{% endblock %}
+        <title>{% block title %} CheckMyChords {% endblock %}</title>
+        <meta charset="utf-8">
+        <style>
+            body {
+                background-color: #101010;
+                color: #F0F0F0;
+            }
+        </style>
+        {% block scripts %}{% endblock %}
     </head>
     <body>
-    	<div>
+        <header>
+        {% block header %}
+        {% endblock %}
+        </header>
+        <div>
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+            </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
         {% block content %}
         {% endblock %}
         </div>
         <br><br><br><br>
         <footer>
-        	<p><small>Date: {{ date }}</small></p>
-        	<p><small>Version: {{ version }}</small></p>
+            {% if user.is_authenticated %}
+                <p>Logged in as: {{ user }}</p>
+                <a href="{% url 'logout' %}">
+                    <button type="button">Logout</button>
+                </a>
+            {% else %}
+                <p>Not logged in</p>
+                <a href="{% url 'login' %}">
+                    <button type="button">Login</button>
+                </a><br>
+                <a href="{% url 'signup' %}">
+                    <button type="button">Sign up</button>
+                </a>
+            {% endif %}
+            <p>
+                <small>Date: {{ date }}</small><br>
+                <small>Version: {{ version }}</small>
+            </p>
         </footer>
     </body>
 </html>
-
 

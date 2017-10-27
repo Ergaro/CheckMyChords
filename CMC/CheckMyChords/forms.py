@@ -13,11 +13,12 @@ class NewPieceForm(forms.Form):
     alto = forms.CharField(validators = [NotesValidator])
     tenor = forms.CharField(validators = [NotesValidator])
     bass = forms.CharField(validators = [NotesValidator])
-    # TODO: add a key field (not required), turn set_key into a fallback
-    # key = forms.CharField(validaators = [KeyValidator], required=False)
-    
-    # TODO: make it possible to add parts in English notation (C4 for middle C)
-    #        (just need to change numbers to ' or ,-s)
+    is_public = forms.BooleanField(required=False)
+    # The TODOs below are TODO when rewriting Note class ("leaving" pyknon)
+    #     TODO: add a key field (not required), turn set_key into a fallback
+    #       key = forms.CharField(validaators = [KeyValidator], required=False)
+    #     TODO: make it possible to add parts in English notation (C4 for
+    #       middle C) (just need to change numbers to ' or ,-s)
 
     def clean(self):
         # Validates if all parts in the input have the same length
@@ -35,7 +36,7 @@ class NewPieceForm(forms.Form):
         except Exception:
             pass
         return cleaned_data
-    
+
 class SelectRulesForm(forms.Form):
     # Determines which harmony rules will be used in check_harmony method
     RULES = (

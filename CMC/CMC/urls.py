@@ -17,7 +17,10 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+
 from CheckMyChords.views import (
+    SignUpView,
     AddPieceView,
     CheckPieceView,
     PiecesView,
@@ -28,6 +31,10 @@ from CheckMyChords.views import (
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     
+    url(r'^login/', auth_views.login, name='login'),
+    url(r'^logout/$', auth_views.logout, {'next_page': '/'},
+        name='logout'),
+    url(r'^signup/$', SignUpView.as_view(), name='signup'),
     url(r'^new_piece$', AddPieceView.as_view(), name="add_new_piece"),
     url(r'^check_piece/(?P<piece_id>(\d)+)$', CheckPieceView.as_view(),
         name = 'check_piece' ),
@@ -37,3 +44,6 @@ urlpatterns = [
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+

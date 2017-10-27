@@ -4,8 +4,11 @@
 	CMC - new piece
 {% endblock %}
 
-{% block content %}
+{% block header %}
 	<h1>CMC - add a new piece:</h1>
+{% endblock %}
+
+{% block content %}
 	<div>
 	<form method = 'post'>
 		{% csrf_token %}

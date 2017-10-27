@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}CMC - Sign up{% endblock %}
+
+{% block header %}
+    <h2>Sign up</h2>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign up!</button>
+    </form>
+{% endblock %}
