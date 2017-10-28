@@ -1,6 +1,6 @@
 # Introduction
 
-CMC v. 0.1.0
+CMC v. 0.1.1
 
 CheckMyChords is a simple Django app that enables user to add short choral sequences to database and check if they obey some basic harmony rules.
 The piece can be checked using some (or all) selected rules. The rules covered so far include:
