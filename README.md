@@ -3,28 +3,30 @@
 CMC v. 0.1.1
 
 CheckMyChords is a simple Django app that enables user to add short choral sequences to database and check if they obey some basic harmony rules.
+Potentially useful for students of music schools, and everyone interested in classical (tonal) harmony.
 The piece can be checked using some (or all) selected rules. The rules covered so far include:
 * Natural vocal ranges of voices
 * Some of restricted intervals (leaps of a seventh and leaps bigger than an octave)
 * Correct distances between voices and not crossing voices
 * Restricted paralels: consecutive and anticonsecutive unisons, perfect fifths and octaves
-The most basic chord modes (minor, major, with added minor seventh) and functions (T, S, D, D7, Tvi) are recognised:
+The most basic chord modes (minor, major, with added minor seventh) and functions (T, S, D, D7, Tvi) are recognised.
 * Using unrecognised chord
 * Wrong doubling (in Tvi the third CAN be doubled)
 * Using foreign notes in a chord (apart from minor seventh)
-Are treated as a mistake. 
+are treated as a mistake. 
 The user can then see a list of all mistakes made with proper description (where and what rule has been broken)
 The user can always recheck any piece from database using different set of rules.
 
 It's also possible to generate (and download) a midi file of the piece. (Uses JQuery & AJAX to do it without reloading the page).
 The midi file is then also stored on the server and isn't generated again if needed.
 
-CMC started as a CodersLab school final project
+CMC started as a CodersLab school final project.
 
 CMC uses pyknon library (https://github.com/kroger/pyknon)
 
 # Major TODOs
 
+* Add more (more user-friendly) input (and output) options.
 * Adding more harmony rules&logic!
   * All voices going in the same direction
   * Add more recognised chords (Dvii, D9>, D64)
@@ -34,7 +36,6 @@ CMC uses pyknon library (https://github.com/kroger/pyknon)
 
 # License
 
-This library is released under a MIT license. See the [LICENSE](LICENSE.md) file for
-more details.
+This library is released under a MIT license. See the [LICENSE](LICENSE.md) file for more details.
 
 
