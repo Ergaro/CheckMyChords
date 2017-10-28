@@ -26,7 +26,7 @@ class Chord(object):
                           "A": None,  # in "standard" notation (e.g. 5==fifth)
                           "T": None,  # None == 'not recognised'
                           "B": None} 
-        self.read_chord()
+        self._read_chord()
     
     def __str__(self):
         return "S:{s}, A:{a}, T:{t}, B:{b}".format(
@@ -35,13 +35,13 @@ class Chord(object):
             t = self.tenor.to_str,
             b = self.bass.to_str)
     
-    def read_chord(self):
+    def _read_chord(self):
         # determines chord detailed info
-        self.find_root()
-        self.find_structure()
-        self.find_mode()
+        self._find_root()
+        self._find_structure()
+        self._find_mode()
     
-    def find_root(self):
+    def _find_root(self):
         # method deducting chord details from the notes given
         # TODO: Rewrite it to use values instead of midi_numbers 
         #     (will possibly simplify conditions)
@@ -95,7 +95,7 @@ class Chord(object):
         else:
             self.root = self.bass.value
     
-    def find_structure(self):
+    def _find_structure(self):
         # method deducting chord structure from notes given (needs root)
         # should leave initial (None) for unrecognised notes
         # minor/major thirds are distinguished
@@ -113,7 +113,7 @@ class Chord(object):
             if dist_from_root in intervals:
                 self.structure[voice] = intervals[dist_from_root]
     
-    def find_mode(self):
+    def _find_mode(self):
         # method determining chord mode (M, m, M7 or m7) from the chord
         # structure
         if "3>" in self.structure.values() and "3" in self.structure.values():
@@ -193,14 +193,38 @@ class Piece(object):
                       "A": self.alto, 
                       "T": self.tenor,
                       "B": self.bass}
-        self.key = [None, None]
-        self.chords = []
-        self.err_count = 0
-        self.war_count = 0
-        self.err_detailed = []
-        self.war_detailed = []
-        self.read_chords()
-        self.set_key()
+        self._key = [None, None]
+        self._chords = []
+        self._err_count = 0
+        self._war_count = 0
+        self._err_detailed = []
+        self._war_detailed = []
+        self._read_chords()
+        self._set_key()
+    
+    @property
+    def err_count(self):
+        return self._err_count
+    
+    @property
+    def war_count(self):
+        return self._war_count
+    
+    @property
+    def err_detailed(self):
+        return self._err_detailed
+    
+    @property
+    def war_detailed(self):
+        return self._war_detailed
+    
+    @property
+    def key(self):
+        return self._key
+    
+    @property
+    def chords(self):
+        return self._chords
     
     @property
     def parts_hr(self):
@@ -247,46 +271,46 @@ class Piece(object):
             result += num
         return result
     
-    def read_chords(self):
+    def _read_chords(self):
         # converts noteSeqs to chords
         for i in range(len(self.soprano)):
             chord = Chord(self.soprano[i], 
                           self.alto[i], 
                           self.tenor[i], 
                           self.bass[i])
-            self.chords.append(chord)
+            self._chords.append(chord)
     
-    def set_key(self):
+    def _set_key(self):
         # method dentifies key (basing on the first chord)
         # key is stored as a touple - first element determinines the tonic,
         # (integer 0-11) second detemines the mode (1 == major or 0 == minor)
         # method should return C major if failed to read the chord
         if self.chords[0].root != None:
-            self.key[0] = self.chords[0].root
+            self._key[0] = self.chords[0].root
         else:
-            self.key[0] = 0  # C as a fallback value
+            self._key[0] = 0  # C as a fallback value
         if self.chords[0].mode in ("M","M7"):
-            self.key[1] = 1
+            self._key[1] = 1
         elif self.chords[0].mode in ("m", "m7"):
-            self.key[1] = 0 
+            self._key[1] = 0
         else:
-            self.key[1] = 1  # major as a fallback value
+            self._key[1] = 1  # major as a fallback value
     
     def check_harmony(self, rules=['ALL']):
         # main method for checking harmony of a piece, should call methods
         # for checking each rule
         if 'ALL' in rules or 'RANGE' in rules:
-            self.check_range()
+            self._check_range()
         if 'ALL' in rules or 'LEAPS' in rules:
-            self.check_leaps()
+            self._check_leaps()
         if 'ALL' in rules or 'DISTANCES' in rules:
-            self.check_distances()
+            self._check_distances()
         if 'ALL' in rules or 'PARALELS' in rules:
-            self.check_paralels()
+            self._check_paralels()
         if 'ALL' in rules or 'CHORDS' in rules:
-            self.check_chords()
+            self._check_chords()
         if 'ALL' in rules or "CHORDS_IN_CTX" in rules:
-            self.check_chords_in_context()
+            self._check_chords_in_context()
     
     # Methods checking individual rules. Each method should:
     # Increase self.err_count by number of mistakes found
@@ -294,7 +318,7 @@ class Piece(object):
     # ( <Mistake type (str)> , <err_count (int)>, <list of str-s with details
     # about each mistake> )
     
-    def check_range(self):
+    def _check_range(self):
         # checking vocal range for each voice in the piece
         err_count = 0
         errs = []
@@ -315,10 +339,10 @@ class Piece(object):
                     errs.append("Chord {0}: {1} too low".format(idx, voice))
         if err_count:
             errs.sort()
-            self.err_count += err_count
-            self.err_detailed.append(("Voice range errors", err_count, errs))
+            self._err_count += err_count
+            self._err_detailed.append(("Voice range errors", err_count, errs))
     
-    def check_leaps(self):
+    def _check_leaps(self):
         # checking for restricted intervals: leaps of a 7th, or >=9th
         err_count = 0
         errs = []
@@ -340,10 +364,10 @@ class Piece(object):
                             format(i+1, i+2, voice))
         if err_count:
             errs.sort()
-            self.err_count += err_count
-            self.err_detailed.append(("Restricted leaps", err_count, errs))
+            self._err_count += err_count
+            self._err_detailed.append(("Restricted leaps", err_count, errs))
     
-    def check_distances(self):
+    def _check_distances(self):
         # checking each chord for too high distances between voices and 
         # too low distances (overlaps == crossing voices)
         err_count = 0
@@ -375,17 +399,17 @@ class Piece(object):
                 err_count += 1
                 errs.append("Chord {0}: T/B overlap".format(i+1))
         if err_count:
-            self.err_count += err_count
-            self.err_detailed.append(
+            self._err_count += err_count
+            self._err_detailed.append(
                 ("Voice distance errors", err_count, errs)
             )
         if war_count:
-            self.war_count += war_count
-            self.war_detailed.append(
+            self._war_count += war_count
+            self._war_detailed.append(
                 ("Voice distance warnings", war_count, wars)
             )
     
-    def check_paralels(self):
+    def _check_paralels(self):
         # checking for restricted (anti)consecutive intervals (1, 5, 8)
         err_count = 0
         errs = []
@@ -466,10 +490,12 @@ class Piece(object):
                                 format(i+1, i+2))
             
         if err_count:
-            self.err_count += err_count
-            self.err_detailed.append(("Consecutive intervals", err_count, errs))
+            self._err_count += err_count
+            self._err_detailed.append(
+                ("Consecutive intervals", err_count, errs)
+            )
     
-    def check_chords(self):
+    def _check_chords(self):
         # checking for wrong chords (unrecognisable, or wrong dubling)
         # if chord is unrecognisable, other conditions aren't checked
         # e.g - chord c,d,e,g, will get warning (d doesn't belong to C chord)
@@ -516,24 +542,24 @@ class Piece(object):
                     errs.append("Chord {0}: more than one seventh in the chord".
                                     format(idx))
         if err_count:
-            self.err_count += err_count
-            self.err_detailed.append(("Unnown chords", err_count, errs))
+            self._err_count += err_count
+            self._err_detailed.append(("Unnown chords", err_count, errs))
         
         if war_count:
-            self.war_count += war_count
-            self.war_detailed.append(
+            self._war_count += war_count
+            self._war_detailed.append(
                 ("Foreign notes in chords and wrong doubling", war_count, wars)
             )
     
-    def check_chords_in_context(self):
+    def _check_chords_in_context(self):
         err_count = 0
         errs = []
         war_count = 0
         wars = []
         war_count += 1
         wars.append("Checking chords in context not yet implemented!")
-        self.war_count += war_count
-        self.war_detailed.append(
+        self._war_count += war_count
+        self._war_detailed.append(
             ("Checking chords in context", war_count, wars)
         )
 
