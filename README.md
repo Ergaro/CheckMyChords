@@ -31,6 +31,7 @@ CMC uses pyknon library (https://github.com/kroger/pyknon)
   * All voices going in the same direction
   * Add more recognised chords (Dvii, D9>, D64)
   * Checking chords in context (e.g. subdominant shouldn't occur after a dominant)
+* Rewrite mistakes handling - there should be a class managing it
 * Add tests and demo
 * Limit pyknon libraty usage to midi generation and write own Note class instead, that should distinguish enharmonic equivalent notes. Currently it's impossible and that leads to major problems - e.g. treating (D, E#, A) as a legitimate D minor chord, which makes some harmonic rules impossible to implement.
 
