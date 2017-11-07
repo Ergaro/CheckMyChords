@@ -10,7 +10,13 @@ class Chord(object):
     # (as well as methods for getting that info)
     
     def __init__(self, soprano, alto, tenor, bass):
-        # TODO: raise error if input data are not Note objects (or are rests)
+        if (not isinstance(soprano, Note)) or \
+           (not isinstance(alto, Note)) or \
+           (not isinstance(tenor, Note)) or \
+           (not isinstance(bass, Note)):
+            raise TypeError(
+                'A Chord object should be built using Note objects' 
+                + ' as arguments.')
         # TODO: add an iterator (over parts) and delete self.parts
         self.soprano = soprano
         self.alto = alto
