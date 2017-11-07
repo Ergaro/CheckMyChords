@@ -52,7 +52,6 @@ class Chord(object):
         # finding root
         #   ifs' condtions ordered by decreasing "importance"
         #     I. looking for a fifth (including crossed voices)
-        
         if (t-b) in (7, 19, 31) \
                 or (a-b) in (7, 19, 31, 43) \
                 or (s-b) in (7, 19, 31, 43):

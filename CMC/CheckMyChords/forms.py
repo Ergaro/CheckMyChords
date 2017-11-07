@@ -28,13 +28,15 @@ class NewPieceForm(forms.Form):
             a = len(NoteSeq(cleaned_data['alto']))
             t = len(NoteSeq(cleaned_data['tenor']))
             b = len(NoteSeq(cleaned_data['bass']))
-            print([s,a,t,b])
             if not (s == a == t == b != 0):
                 msg = ValidationError("All parts must have the same length" + 
                                     " and have more than 0 notes")
                 self.add_error(None, msg)
         except Exception:
-            pass
+            msg = ValidationError("Wrong input, unidentified error")
+            self.add_error(None, msg)
+            # TODO: this should never happen after NotesValidator is
+            # strengthened
         return cleaned_data
 
 class SelectRulesForm(forms.Form):
