@@ -9,7 +9,7 @@ class Chord(object):
     # a class storing a chord (as Note objects) and additional info about it
     # (as well as methods for getting that info)
     
-    def __init__(self, soprano, alto, tenor, bass):
+    def __init__(self, soprano, alto, tenor, bass):  # TODO: pass more arguments (key)
         if (not isinstance(soprano, Note)) or \
            (not isinstance(alto, Note)) or \
            (not isinstance(tenor, Note)) or \

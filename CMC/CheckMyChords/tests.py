@@ -38,7 +38,7 @@ class ChordTests(TestCase):
             c_chord=Chord("w", "x", "y", "z")
 
     def test_chord_created_using_strings(self):
-        # chord object should be able to get proper strings as arguments
+        # chord object should be able to handle proper strings as arguments
         # should just try - Note(given_string) - not yet implemented
         
         # create chord from given notes
@@ -54,6 +54,37 @@ class ChordTests(TestCase):
         self.assertIs(type(c_chord.tenor), Note)
         self.assertIs(type(c_chord.bass), Note)
 
+    def test_chord_find_root_simple_chords(self):
+        c_chord = Chord(Note("G'"), Note("E'"), Note("C'"), Note("C,"))
+    
+    def test_chord_find_root_simple_chords_inversions(self):
+        pass
+    
+    def test_chord_find_root_simple_septimal_chords(self):
+        pass
+    
+    def test_chord_find_root_septimal_chords_inversions(self):
+        pass
+
+    def test_chord_find_root_ninth_chords(self):
+        pass
+    
+    def test_chord_find_root_other_chords(self):
+        # D64 or similar?
+        pass
+    
+    def test_chord_find_root_incomplete_and_wrongly_named_chords(self):
+        pass
+
+    def test_chord_structure_for_simple_chords(self):
+        pass
+    
+    def test_chord_structure_for_chords_with_added_seventh(self):
+        pass
+    
+    def test_chord_structure_for_chords_with_fith_ommited(self):
+        pass
+    
 
 
 class HarmonyRulesTests(TestCase):
