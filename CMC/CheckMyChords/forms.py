@@ -1,9 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from pyknon.music import NoteSeq
-
 from CheckMyChords.models import MusicPiece
+from CheckMyChords.pyknon_extension import NoteSeq
 from CheckMyChords.validators import NotesValidator
 
 

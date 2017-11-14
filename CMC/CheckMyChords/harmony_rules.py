@@ -1,8 +1,7 @@
 # Stores classes & functions needed to check harmony of a piece
-from pyknon.music import Note, NoteSeq
 
 from CheckMyChords.models import MusicPiece
-from CheckMyChords.pyknon_extension import *
+from CheckMyChords.pyknon_extension import Note, NoteSeq
 
 
 class Chord(object):

@@ -1,8 +1,7 @@
 from django.test import TestCase
 
-from pyknon.music import Note, NoteSeq
-
 from CheckMyChords.harmony_rules import Chord
+from CheckMyChords.pyknon_extension import Note, NoteSeq
 # Create your tests here.
 
 

@@ -15,7 +15,6 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 
 from pyknon.genmidi import Midi
-from pyknon.music import NoteSeq
 
 from CMC.settings import MEDIA_ROOT, MEDIA_URL
 from CheckMyChords.forms import (
@@ -24,6 +23,7 @@ from CheckMyChords.forms import (
 )
 from CheckMyChords.harmony_rules import check_harmony_rules, make_piece
 from CheckMyChords.models import MusicPiece
+from CheckMyChords.pyknon_extension import NoteSeq
 
 
 class SignUpView(View):
