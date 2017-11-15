@@ -108,7 +108,7 @@ class ChordTests(TestCase):
         self.assertEqual(b_septimal.root, 11)
         
     def test_chord_find_root_septimal_chords_inversions(self):
-        # Major chords only (Dominant)
+        # Major chords only (Dominant seventh chords)
         fs_septimal_fi = Chord(Note("F#'"), Note("E'"), Note("C#'"), Note("A#,"))
         g_septimal_si = Chord(Note("F'"), Note("B,"), Note("G,"), Note("D,"))
         ab_septimal_ti = Chord(Note("Eb'"), Note("C'"), Note("Ab,"), Note("Gb,"))
@@ -138,14 +138,62 @@ class ChordTests(TestCase):
         self.assertEqual(d_minor_ninth.root, 2)
         self.assertEqual(eb_major_ninth.root, 3)
         
-    def test_chord_find_root_ninth_chords_inversions(self):        
-        pass
+    def test_chord_find_root_ninth_chords_inversions(self):
+        # Major chords only (Dominant ninth chords)
+        # Not yet implemented
+        f_maj_ninth_fi = Chord(Note("G'"), Note("Eb'"), Note("F,"), Note("A,,"))
+        ab_min_ninth_fi = Chord(Note("Bbb'"), Note("Gb'"), Note("Ab,"), Note("C,"))
+        b_maj_ninth_ti = Chord(Note("C#''"), Note("D#'"), Note("B,"), Note("A,"))
+        ds_min_ninth_ti = Chord(Note("E''"), Note("F##'"), Note("D#'"), Note("C#,"))
+        
+        f_maj_ninth_fi._read_chord()
+        ab_min_ninth_fi._read_chord()
+        b_maj_ninth_ti._read_chord()
+        ds_min_ninth_ti._read_chord()
+        
+        self.assertEqual(f_maj_ninth_fi.root, 5)
+        self.assertEqual(ab_min_ninth_fi.root, 8)
+        self.assertEqual(b_maj_ninth_ti.root, 11)
+        self.assertEqual(ds_min_ninth_ti.root, 3)
+    
     
     def test_chord_find_root_incomplete_chords(self):
-        pass
-    
+        # 1 1 1 3 and 1 1 1 3> chords (should be recognized even if inverted)
+        f_min_1113 = Chord(Note("Ab'"), Note("F'"), Note("F,"), Note("F,,"))
+        g_major_1113 = Chord(Note("G'"), Note("B,"), Note("G,"), Note("G,,"))
+        a_major_1113_fi = Chord(Note("A'"), Note("A'"), Note("A,"), Note("C#,"))
+        # 1 1 3 7 chord
+        db_major_1137 = Chord(Note("F'"), Note("Db'"), Note("Cb'"), Note("Db,"))
+        db_major_1137_fi = Chord(Note("Db''"), Note("Db'"), Note("Cb'"), Note("F,"))
+        db_major_1137_si = Chord(Note("Db''"), Note("F'"), Note("Db'"), Note("Cb'"))
+        # 1 5 chord
+        fs_15 = Chord(Note("F#'"), Note("C#'"), Note("C#'"), Note("F#,"))
+        fs_15_inverted = Chord(Note("F#'"), Note("C#'"), Note("F#,"), Note("C#,"))
+        # 1111 chord
+        db_1111 = Chord(Note("Db'"), Note("Db'"), Note("Db'"), Note("Db'"))
+        
+        f_min_1113._read_chord()
+        g_major_1113._read_chord()
+        a_major_1113_fi._read_chord()
+        db_major_1137._read_chord()
+        db_major_1137_fi._read_chord()
+        db_major_1137_si._read_chord()
+        fs_15._read_chord()
+        fs_15_inverted._read_chord()
+        db_1111._read_chord()
+        
+        self.assertEqual(f_min_1113.root, 5)
+        self.assertEqual(g_major_1113.root, 7)
+        self.assertEqual(a_major_1113_fi.root, 9)
+        self.assertEqual(db_major_1137.root, 1)
+        self.assertEqual(db_major_1137_fi.root, 1)
+        self.assertEqual(db_major_1137_si.root, 1)
+        self.assertEqual(fs_15.root, 6)
+        self.assertEqual(fs_15_inverted.root, 6)
+        self.assertEqual(db_1111.root, 1)
+        
     def test_chord_find_root_wrongly_named_chords(self):
-        # Some basic chords should be recognised even if wrongly written
+        # Some basic chords should be recognized even if wrongly written
         # e.g. F-G#-C
         pass
     
